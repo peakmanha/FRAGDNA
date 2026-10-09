@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FRAGDNA</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #08090c;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        header {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #ff5c00;
+        }
+
+        .status {
+            color: #666;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .language-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #444;
+            font-size: 13px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #555;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .lang-btn.active {
+            color: #ff5c00;
+        }
+
+        .lang-btn:hover {
+            color: #ff5c00;
+        }
+
+        .hero {
+            text-align: center;
+            padding-top: 100px;
+            padding-bottom: 100px;
+        }
+
+        .hero-label {
+            color: #ff5c00;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 72px;
+            line-height: 1;
+            letter-spacing: -3px;
+            margin-bottom: 25px;
+        }
+
+        .hero p {
+            color: #777;
+            font-size: 18px;
+            margin-bottom: 45px;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input {
+            width: 520px;
+            padding: 18px 20px;
+            background: #111318;
+            border: 1px solid #24262d;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #ff5c00;
+        }
+
+        button {
+            padding: 18px 28px;
+            background: #ff5c00;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #ff7526;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 40px;
+            padding: 30px;
+            background: #101217;
+            border: 1px solid #24262d;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .result h2 {
+            font-size: 30px;
+            margin-bottom: 25px;
+        }
+
+        .player-heading {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .player-avatar {
+            width: 76px;
+            height: 76px;
+            flex-shrink: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1b1d24;
+            border: 1px solid #343640;
+            color: #ff5c00;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .player-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-identity h2 {
+            margin: 5px 0;
+            font-size: 28px;
+            overflow-wrap: anywhere;
+        }
+
+        .player-label {
+            color: #ff5c00;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .player-subtitle {
+            color: #666;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .stat {
+            background: #15171d;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .stat-name {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Карточки статистики */
+        .stat {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #22252d;
+            transition: border-color 0.25s, transform 0.25s;
+        }
+
+        .stat:hover {
+            border-color: #ff5c00;
+            transform: translateY(-3px);
+        }
+
+        .stat-main {
+            background: linear-gradient(145deg, #1c1714, #15171d);
+        }
+
+        .stat-main .stat-value {
+            color: #ff5c00;
+        }
+
+        .stat-name {
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dna {
+            margin-top: 25px;
+            padding: 25px;
+            background: #0c0e12;
+            border-radius: 10px;
+        }
+
+        .dna-title {
+            color: #ff5c00;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .dna h3 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .dna p {
+            color: #777;
+        }
+
+        .dna-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .dna-label {
+            color: #555;
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .dna h3 {
+            font-size: 32px;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .dna p {
+            color: #777;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .dna-level {
+            text-align: right;
+            min-width: 80px;
+        }
+
+        .dna-level span {
+            display: block;
+            color: #555;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 3px;
+        }
+
+        .dna-level strong {
+            font-size: 42px;
+            color: #ff5c00;
+        }
+
+        /* Блок игровых ролей */
+        .dna-scores {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #24262d;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px 30px;
+        }
+
+        /* Одна роль */
+        .dna-score {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 10px 12px;
+        }
+
+        /* Название роли */
+        .dna-score-name {
+            color: #999;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        /* Процент роли */
+        .dna-score-value {
+            color: #ff5c00;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        /* Фоновая часть полоски */
+        .dna-score-bar {
+            grid-column: 1 / -1;
+            width: 100%;
+            height: 8px;
+            background: #24262d;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        /* Заполненная часть */
+        .dna-score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff5c00, #ff8a3d);
+            border-radius: 20px;
+            transition: width 1s ease;
+            transform-origin: left;
+            animation: dnaFill 1s ease-out both;
+        }
+
+        /* Выделение сильнейшей роли */
+        .dna-score.top-role .dna-score-name {
+            color: #ffffff;
+        }
+
+        .dna-score.top-role .dna-score-value {
+            color: #ff8a3d;
+        }
+
+        .dna-score.top-role .dna-score-bar {
+            box-shadow: 0 0 12px rgba(255, 92, 0, 0.18);
+        }
+
+        .dna-score.top-role .dna-score-fill {
+            background: linear-gradient(90deg, #ff5c00, #ffb16e);
+        }
+
+        /* Метка сильной роли */
+        .dna-score-badge {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: rgba(255, 92, 0, 0.14);
+            color: #ff8a3d;
+            font-size: 9px;
+            letter-spacing: 1px;
+            vertical-align: middle;
+        }
+
+        @keyframes dnaFill {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            h1 {
+                font-size: 48px;
+            }
+
+            .hero {
+                padding-top: 70px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            input {
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+
+    <div class="logo">
+        FRAG<span>DNA</span>
+    </div>
+
+    <div class="header-right">
+
+        <div class="status" id="statusText">
+            CS2 PLAYER ANALYZER
+        </div>
+
+        <div class="language-switch">
+
+            <button
+                type="button"
+                class="lang-btn active"
+                id="ruBtn"
+                onclick="setLanguage('ru')">
+                RU
+            </button>
+
+            <span>|</span>
+
+            <button
+                type="button"
+                class="lang-btn"
+                id="enBtn"
+                onclick="setLanguage('en')">
+                EN
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+    <section class="hero">
+
+        <div class="hero-label">
+            DISCOVER YOUR PLAYER DNA
+        </div>
+
+        <h1>
+            MORE THAN<br>
+            YOUR STATS.
+        </h1>
+
+        <p>
+            Analyze your CS2 profile and discover your playstyle.
+        </p>
+
+        <form method="POST">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    name="steam_url"
+                    placeholder="Paste your Steam profile URL..."
+                >
+
+                <button type="submit">
+                    ANALYZE
+                </button>
+
+            </div>
+
+        </form>
+
+        {% if result %}
+
+        <div class="result">
+
+            {% if result.error %}
+
+                <h2>{{ result.error }}</h2>
+
+            {% else %}
+
+                <div class="player-heading">
+                    <div class="player-avatar">
+                        {% if result.avatar %}
+                            <img src="{{ result.avatar }}" alt="Аватар игрока">
+                        {% else %}
+                            <span>CS2</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="player-identity">
+                        <div class="player-label">FACEIT PLAYER</div>
+                        <h2>{{ result.nickname }}</h2>
+                        <div class="player-subtitle">PLAYER PROFILE ANALYZED</div>
+                    </div>
+                </div>
+
+                <div class="stats">
+
+    <div class="stat stat-main">
+        <div class="stat-name">FACEIT LEVEL</div>
+        <div class="stat-value">{{ result.level }}</div>
+    </div>
+
+    <div class="stat stat-main">
+        <div class="stat-name">ELO</div>
+        <div class="stat-value">{{ result.elo }}</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-name">K/D</div>
+        <div class="stat-value">{{ result.kd }}</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-name">HEADSHOTS</div>
+        <div class="stat-value">{{ result.headshots }}%</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-name">ADR</div>
+        <div class="stat-value">{{ result.adr }}</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-name">MATCHES</div>
+        <div class="stat-value">{{ result.matches }}</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-name">WINS</div>
+        <div class="stat-value">{{ result.wins }}</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-name">WINRATE</div>
+        <div class="stat-value">{{ result.winrate }}%</div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-name">WIN STREAK</div>
+        <div class="stat-value">{{ result.win_streak }}</div>
+    </div>
+
+                </div>
+
+               <div class="dna">
+
+    <div class="dna-title" id="dnaTitle">
+        ИГРОВАЯ ДНК
+    </div>
+
+    <div class="dna-main">
+
+        <div>
+
+            <div class="dna-label" id="dnaLabel">
+                ТВОЙ СТИЛЬ ИГРЫ
+            </div>
+
+            <h3 id="dnaName">
+                {{ result.dna_name }}
+            </h3>
+
+            <p id="dnaDescription">
+                {{ result.dna_description }}
+            </p>
+
+        </div>
+
+        <div class="dna-level">
+
+            <span id="dnaLevelTitle">
+                ДНК
+            </span>
+
+            <strong>01</strong>
+
+        </div>
+
+    </div>
+
+    <div class="dna-scores">
+
+        <div class="dna-score">
+            <div class="dna-score-name">ENTRY</div>
+
+            <div class="dna-score-bar">
+                <div
+                    class="dna-score-fill"
+                    style="width: {{ result.dna_scores.entry }}%;">
+                </div>
+            </div>
+
+            <div class="dna-score-value">
+                {{ result.dna_scores.entry }}%
+            </div>
+        </div>
+
+
+        <div class="dna-score">
+            <div class="dna-score-name">LURKER</div>
+
+            <div class="dna-score-bar">
+                <div
+                    class="dna-score-fill"
+                    style="width: {{ result.dna_scores.lurker }}%;">
+                </div>
+            </div>
+
+            <div class="dna-score-value">
+                {{ result.dna_scores.lurker }}%
+            </div>
+        </div>
+
+
+        <div class="dna-score">
+            <div class="dna-score-name">SNIPER</div>
+
+            <div class="dna-score-bar">
+                <div
+                    class="dna-score-fill"
+                    style="width: {{ result.dna_scores.sniper }}%;">
+                </div>
+            </div>
+
+            <div class="dna-score-value">
+                {{ result.dna_scores.sniper }}%
+            </div>
+        </div>
+
+
+        <div class="dna-score">
+            <div class="dna-score-name">SUPPORT</div>
+
+            <div class="dna-score-bar">
+                <div
+                    class="dna-score-fill"
+                    style="width: {{ result.dna_scores.support }}%;">
+                </div>
+            </div>
+
+            <div class="dna-score-value">
+                {{ result.dna_scores.support }}%
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+<script>
+
+    const translations = {
+
+    ru: {
+        status: "АНАЛИЗАТОР ИГРОКА CS2",
+        label: "УЗНАЙ СВОЮ ИГРОВУЮ ДНК",
+        title: "БОЛЬШЕ ЧЕМ<br>ПРОСТО СТАТИСТИКА.",
+        description: "Проанализируй свой профиль CS2 и узнай свой стиль игры.",
+        placeholder: "Вставь ссылку на Steam-профиль...",
+        button: "АНАЛИЗИРОВАТЬ",
+
+        dnaTitle: "ИГРОВАЯ ДНК",
+        dnaLabel: "ТВОЙ СТИЛЬ ИГРЫ",
+        dnaName: "ЭНТРИ-ФРАГГЕР",
+        dnaDescription: "Агрессивный игрок, который первым вступает в перестрелки и создаёт пространство для команды.",
+        dnaLevelTitle: "ДНК"
+    },
+
+    en: {
+        status: "CS2 PLAYER ANALYZER",
+        label: "DISCOVER YOUR PLAYER DNA",
+        title: "MORE THAN<br>YOUR STATS.",
+        description: "Analyze your CS2 profile and discover your playstyle.",
+        placeholder: "Paste your Steam profile URL...",
+        button: "ANALYZE",
+
+        dnaTitle: "PLAYER DNA",
+        dnaLabel: "YOUR PLAYSTYLE",
+        dnaName: "ENTRY FRAGGER",
+        dnaDescription: "Aggressive player who creates space and takes the first fights.",
+        dnaLevelTitle: "DNA"
+    }
+
+};
+
+
+    function setLanguage(language) {
+
+    document.getElementById("statusText").innerHTML =
+        translations[language].status;
+
+    document.querySelector(".hero-label").innerHTML =
+        translations[language].label;
+
+    document.querySelector("h1").innerHTML =
+        translations[language].title;
+
+    document.querySelector(".hero > p").innerHTML =
+        translations[language].description;
+
+    document.querySelector("input").placeholder =
+        translations[language].placeholder;
+
+    document.querySelector("button[type='submit']").innerHTML =
+        translations[language].button;
+
+    document.getElementById("dnaTitle").innerHTML =
+        translations[language].dnaTitle;
+
+    document.getElementById("dnaLabel").innerHTML =
+        translations[language].dnaLabel;
+
+    document.getElementById("dnaLevelTitle").innerHTML =
+        translations[language].dnaLevelTitle;
+
+    document.getElementById("ruBtn").classList.remove("active");
+    document.getElementById("enBtn").classList.remove("active");
+
+    document.getElementById(language + "Btn").classList.add("active");
+    localStorage.setItem("fragdna_language", language);
+}
+
+const savedLanguage = localStorage.getItem("fragdna_language") || "ru";
+
+setLanguage(savedLanguage);
+
+function highlightTopRole() {
+    const scores = [...document.querySelectorAll(".dna-score")];
+
+    if (!scores.length) return;
+
+    // Убираем старые отметки
+    scores.forEach(score => {
+        score.classList.remove("top-role");
+
+        const oldBadge = score.querySelector(".dna-score-badge");
+        if (oldBadge) oldBadge.remove();
+    });
+
+    // Получаем проценты каждой роли
+    const roles = scores.map(score => ({
+        element: score,
+        value: Number(
+            score.querySelector(".dna-score-value")
+                ?.textContent.replace("%", "").trim()
+        )
+    })).filter(role => Number.isFinite(role.value));
+
+    if (!roles.length) return;
+
+    // Находим максимальное значение
+    const maxScore = Math.max(...roles.map(role => role.value));
+
+    // Выделяем все роли с максимальным значением
+    roles.forEach(role => {
+        if (role.value !== maxScore) return;
+
+        role.element.classList.add("top-role");
+
+        const name = role.element.querySelector(".dna-score-name");
+
+        if (name) {
+            const badge = document.createElement("span");
+            badge.className = "dna-score-badge";
+            badge.textContent = "TOP ROLE";
+            name.appendChild(badge);
+        }
+    });
+}
+
+highlightTopRole();
+
+</script>
+
+</body>
+
+</html>
